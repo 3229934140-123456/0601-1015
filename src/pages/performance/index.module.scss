@@ -1,0 +1,329 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 40rpx;
+}
+
+.header {
+  background: $gradient-primary;
+  padding: $spacing-xl $page-padding;
+  color: $color-text-white;
+}
+
+.headerTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $spacing-md;
+}
+
+.amountDisplay {
+  text-align: center;
+  margin-bottom: $spacing-lg;
+}
+
+.amountLabel {
+  font-size: $font-size-sm;
+  opacity: 0.9;
+  margin-bottom: $spacing-xs;
+}
+
+.amountValue {
+  font-size: 64rpx;
+  font-weight: $font-weight-bold;
+  line-height: 1.2;
+  margin-bottom: $spacing-xs;
+}
+
+.amountSub {
+  font-size: $font-size-xs;
+  opacity: 0.8;
+}
+
+.progressSection {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  backdrop-filter: blur(10px);
+}
+
+.progressRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.progressLabel {
+  font-size: $font-size-sm;
+  margin-right: auto;
+}
+
+.progressPercent {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+}
+
+.progressBar {
+  height: 16rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $radius-round;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd700 0%, #ffb800 100%);
+  border-radius: $radius-round;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+  padding: $spacing-md $page-padding;
+  margin-top: -24rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.statCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  
+  .statIcon {
+    width: 64rpx;
+    height: 64rpx;
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32rpx;
+    margin-bottom: $spacing-sm;
+    
+    &.visit {
+      background: linear-gradient(135deg, #e8f0ff 0%, #d4e3ff 100%);
+    }
+    
+    &.customer {
+      background: linear-gradient(135deg, #e8ffea 0%, #d4f7d7 100%);
+    }
+    
+    &.opportunity {
+      background: linear-gradient(135deg, #fff3e8 0%, #ffe4cc 100%);
+    }
+    
+    &.winrate {
+      background: linear-gradient(135deg, #f3e8ff 0%, #e2ccff 100%);
+    }
+  }
+  
+  .statValue {
+    font-size: $font-size-xxl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    margin-bottom: 4rpx;
+  }
+  
+  .statLabel {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+  }
+  
+  .statTrend {
+    font-size: $font-size-xs;
+    margin-top: 4rpx;
+    
+    &.up {
+      color: $color-success;
+    }
+    
+    &.down {
+      color: $color-error;
+    }
+  }
+}
+
+.section {
+  margin: $spacing-md $page-padding;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.sectionMore {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.collectionInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md 0;
+  
+  &:not(:last-child) {
+    border-bottom: 1rpx solid $color-divider;
+  }
+}
+
+.collectionLabel {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+}
+
+.collectionValue {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  
+  &.success {
+    color: $color-success;
+  }
+  
+  &.warning {
+    color: $color-warning;
+  }
+}
+
+.weekVisit {
+  margin-top: $spacing-md;
+}
+
+.weekTitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-md;
+}
+
+.weekBars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 200rpx;
+  padding: 0 $spacing-sm;
+}
+
+.weekBarItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.weekBar {
+  width: 32rpx;
+  background: linear-gradient(180deg, $color-primary 0%, $color-primary-light 100%);
+  border-radius: 16rpx 16rpx 0 0;
+  margin-bottom: $spacing-xs;
+  min-height: 16rpx;
+  
+  &.active {
+    background: linear-gradient(180deg, #ffd700 0%, #ffb800 100%);
+  }
+}
+
+.weekDay {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  
+  &.active {
+    color: $color-warning;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.weekCount {
+  font-size: 20rpx;
+  color: $color-text-secondary;
+  margin-bottom: 4rpx;
+}
+
+.rankList {
+  margin-top: $spacing-md;
+}
+
+.rankItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md 0;
+  
+  &:not(:last-child) {
+    border-bottom: 1rpx solid $color-divider;
+  }
+}
+
+.rankNum {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: $radius-round;
+  background: $color-bg-tag;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-tertiary;
+  margin-right: $spacing-md;
+  
+  &.first {
+    background: linear-gradient(135deg, #ffd700 0%, #ffb800 100%);
+    color: #fff;
+  }
+  
+  &.second {
+    background: linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 100%);
+    color: #fff;
+  }
+  
+  &.third {
+    background: linear-gradient(135deg, #cd7f32 0%, #b87333 100%);
+    color: #fff;
+  }
+}
+
+.rankAvatar {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: $radius-round;
+  margin-right: $spacing-sm;
+}
+
+.rankInfo {
+  flex: 1;
+}
+
+.rankName {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+  margin-bottom: 4rpx;
+}
+
+.rankDept {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.rankAmount {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-warning;
+}

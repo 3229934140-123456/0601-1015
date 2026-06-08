@@ -1,0 +1,251 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+}
+
+.header {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  padding: 64rpx $page-padding 96rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  border: 6rpx solid rgba(255, 255, 255, 0.3);
+  margin-bottom: $spacing-md;
+  background-color: $color-bg-card;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xs;
+}
+
+.name {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.position {
+  font-size: $font-size-md;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.actionGrid {
+  display: flex;
+  background-color: $color-bg-card;
+  margin: -48rpx $page-padding $spacing-lg;
+  border-radius: $radius-lg;
+  padding: $spacing-lg 0;
+  box-shadow: $shadow-card;
+  position: relative;
+  z-index: 1;
+}
+
+.actionItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.actionIcon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background-color: $color-bg-tag;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  margin-bottom: $spacing-xs;
+}
+
+.actionText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.customerCard {
+  margin: 0 $page-padding $spacing-lg;
+  padding: $spacing-lg;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.cardTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.arrowText {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
+.customerInfo {
+  display: flex;
+  align-items: center;
+}
+
+.customerAvatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: $radius-md;
+  background-color: $color-bg-tag;
+}
+
+.customerDetail {
+  flex: 1;
+  margin-left: $spacing-md;
+}
+
+.customerName {
+  display: block;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: 4rpx;
+}
+
+.customerDesc {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.infoCard {
+  margin: 0 $page-padding $spacing-lg;
+  padding: $spacing-lg;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-sm 0;
+}
+
+.infoLabel {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+}
+
+.infoValueRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.infoValue {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.infoAction {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  padding: 4rpx $spacing-sm;
+  background-color: $color-primary-light;
+  border-radius: $radius-xs;
+}
+
+.infoDivider {
+  height: 1rpx;
+  background-color: $color-divider;
+  margin: $spacing-xs 0;
+}
+
+.birthdayCard {
+  margin: 0 $page-padding $spacing-lg;
+  padding: $spacing-lg;
+  background: linear-gradient(135deg, #fff5f0 0%, #fff0f5 100%);
+}
+
+.birthdayInfo {
+  display: flex;
+  align-items: center;
+}
+
+.birthdayIcon {
+  font-size: 48rpx;
+  margin-right: $spacing-md;
+}
+
+.birthdayDetail {
+  flex: 1;
+}
+
+.birthdayDate {
+  display: block;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: 4rpx;
+}
+
+.birthdayDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.remarkCard {
+  margin: 0 $page-padding $spacing-lg;
+  padding: $spacing-lg;
+}
+
+.remarkText {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+}
+
+.actionBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $page-padding;
+  background-color: $color-bg-card;
+  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.06);
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  z-index: 100;
+}
+
+.actionBtn {
+  flex: 1;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+}
+
+.secondary {
+  background-color: $color-bg-tag;
+  color: $color-text-primary;
+}
+
+.primary {
+  background-color: $color-primary;
+  color: $color-text-white;
+}

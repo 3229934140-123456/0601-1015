@@ -1,0 +1,348 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 120rpx;
+}
+
+.tabBar {
+  display: flex;
+  background: $color-bg-card;
+  padding: $spacing-sm 0;
+  border-bottom: 1rpx solid $color-divider;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tabItem {
+  flex: 1;
+  text-align: center;
+  padding: $spacing-sm 0;
+  position: relative;
+  
+  .tabText {
+    font-size: $font-size-md;
+    color: $color-text-secondary;
+  }
+  
+  &.active {
+    .tabText {
+      color: $color-primary;
+      font-weight: $font-weight-semibold;
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48rpx;
+      height: 6rpx;
+      background: $color-primary;
+      border-radius: 3rpx;
+    }
+  }
+}
+
+.dateHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md $page-padding;
+  background: $color-bg-card;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.dateTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.dateSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-left: $spacing-sm;
+}
+
+.routeButton {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 24rpx;
+  background: $color-primary-bg;
+  border-radius: $radius-button;
+  
+  .routeIcon {
+    font-size: 24rpx;
+    margin-right: 8rpx;
+  }
+  
+  .routeText {
+    font-size: $font-size-sm;
+    color: $color-primary;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.visitList {
+  padding: $spacing-md $page-padding;
+}
+
+.visitItem {
+  position: relative;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  
+  &:active {
+    opacity: 0.95;
+  }
+}
+
+.timeLine {
+  position: absolute;
+  left: 72rpx;
+  top: 0;
+  bottom: -24rpx;
+  width: 4rpx;
+  background: $color-border;
+  z-index: 0;
+  
+  &.last {
+    display: none;
+  }
+}
+
+.visitHeader {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+}
+
+.timeDot {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: $radius-round;
+  background: $color-primary;
+  margin-right: $spacing-lg;
+  margin-top: 8rpx;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 6rpx $color-primary-bg;
+  
+  &.completed {
+    background: $color-success;
+    box-shadow: 0 0 0 6rpx $color-success-bg;
+  }
+  
+  &.cancelled {
+    background: $color-text-disabled;
+    box-shadow: 0 0 0 6rpx $color-bg-tag;
+  }
+}
+
+.visitContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.visitTimeRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.visitTime {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-right: $spacing-sm;
+}
+
+.visitDuration {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.visitStatus {
+  padding: 4rpx 16rpx;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  margin-left: auto;
+  
+  &.pending {
+    background: $color-warning-bg;
+    color: $color-warning;
+  }
+  
+  &.ongoing {
+    background: $color-primary-bg;
+    color: $color-primary;
+  }
+  
+  &.completed {
+    background: $color-success-bg;
+    color: $color-success;
+  }
+  
+  &.cancelled {
+    background: $color-bg-tag;
+    color: $color-text-tertiary;
+  }
+}
+
+.customerRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.customerAvatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: $radius-md;
+  margin-right: $spacing-sm;
+}
+
+.customerInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.customerName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  @include text-ellipsis;
+}
+
+.visitPurpose {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.5;
+  margin-bottom: $spacing-md;
+}
+
+.visitFooter {
+  display: flex;
+  align-items: center;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.visitLocation {
+  flex: 1;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  @include text-ellipsis;
+}
+
+.visitDistance {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  margin-right: $spacing-md;
+}
+
+.visitAction {
+  padding: 12rpx 32rpx;
+  background: $gradient-primary;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  color: $color-text-white;
+  font-weight: $font-weight-medium;
+  
+  &.secondary {
+    background: $color-bg-page;
+    color: $color-text-secondary;
+  }
+  
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.emptyState {
+  text-align: center;
+  padding: 120rpx 0;
+  
+  .emptyIcon {
+    font-size: 120rpx;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .emptyText {
+    font-size: $font-size-md;
+    color: $color-text-tertiary;
+    margin-bottom: $spacing-md;
+  }
+  
+  .emptyTip {
+    font-size: $font-size-sm;
+    color: $color-text-disabled;
+  }
+}
+
+.addButton {
+  position: fixed;
+  right: $page-padding;
+  bottom: 140rpx;
+  width: 104rpx;
+  height: 104rpx;
+  background: $gradient-primary;
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: $shadow-popup;
+  z-index: 100;
+  
+  &:active {
+    transform: scale(0.95);
+    opacity: 0.9;
+  }
+  
+  .addIcon {
+    font-size: 48rpx;
+    color: $color-text-white;
+    font-weight: $font-weight-light;
+  }
+}
+
+.statsBar {
+  display: flex;
+  padding: $spacing-md $page-padding;
+  background: $color-bg-card;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.statItem {
+  flex: 1;
+  text-align: center;
+  
+  .statNum {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+    margin-bottom: 4rpx;
+  }
+  
+  .statLabel {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+  }
+  
+  &.success .statNum {
+    color: $color-success;
+  }
+  
+  &.warning .statNum {
+    color: $color-warning;
+  }
+}

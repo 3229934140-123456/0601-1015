@@ -1,0 +1,71 @@
+@use '@/styles/variables.scss' as *;
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-sm;
+  white-space: nowrap;
+  
+  &.sm {
+    padding: 4rpx 12rpx;
+    .text {
+      font-size: $font-size-xs;
+      line-height: 1.4;
+    }
+  }
+  
+  &.md {
+    padding: 8rpx 16rpx;
+    .text {
+      font-size: $font-size-sm;
+      line-height: 1.4;
+    }
+  }
+  
+  &.primary {
+    background: $color-primary-bg;
+    .text {
+      color: $color-primary;
+    }
+  }
+  
+  &.success {
+    background: $color-success-bg;
+    .text {
+      color: $color-success;
+    }
+  }
+  
+  &.warning {
+    background: $color-warning-bg;
+    .text {
+      color: $color-warning;
+    }
+  }
+  
+  &.error {
+    background: $color-error-bg;
+    .text {
+      color: $color-error;
+    }
+  }
+  
+  &.info {
+    background: $color-info-bg;
+    .text {
+      color: $color-info;
+    }
+  }
+  
+  &.default {
+    background: $color-bg-tag;
+    .text {
+      color: $color-text-secondary;
+    }
+  }
+}
+
+.text {
+  font-weight: $font-weight-medium;
+}

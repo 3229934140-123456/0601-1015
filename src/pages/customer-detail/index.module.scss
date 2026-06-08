@@ -1,0 +1,349 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+}
+
+.header {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  padding: 48rpx $page-padding 64rpx;
+}
+
+.customerInfo {
+  display: flex;
+  align-items: center;
+}
+
+.customerAvatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: $radius-lg;
+  background-color: $color-bg-card;
+}
+
+.customerDetail {
+  flex: 1;
+  margin-left: $spacing-lg;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xs;
+}
+
+.customerName {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.industryText {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.statsRow {
+  display: flex;
+  align-items: center;
+  background-color: $color-bg-card;
+  margin: -32rpx $page-padding 0;
+  border-radius: $radius-lg;
+  padding: $spacing-lg 0;
+  box-shadow: $shadow-card;
+  position: relative;
+  z-index: 1;
+}
+
+.statItem {
+  flex: 1;
+  text-align: center;
+}
+
+.statValue {
+  display: block;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.statLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.statDivider {
+  width: 1rpx;
+  height: 60rpx;
+  background-color: $color-divider;
+}
+
+.infoCard {
+  margin: $spacing-lg $page-padding;
+  padding: $spacing-lg;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-sm 0;
+}
+
+.infoLabel {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+}
+
+.infoValue {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  max-width: 420rpx;
+  text-align: right;
+}
+
+.infoDivider {
+  height: 1rpx;
+  background-color: $color-divider;
+  margin: $spacing-xs 0;
+}
+
+.descCard {
+  margin: 0 $page-padding $spacing-lg;
+  padding: $spacing-lg;
+}
+
+.sectionCard {
+  margin: 0 $page-padding $spacing-lg;
+  padding: $spacing-lg;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.cardTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.moreText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.addBtn {
+  padding: $spacing-xs $spacing-sm;
+  background-color: $color-primary-light;
+  border-radius: $radius-xs;
+}
+
+.addText {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
+.descText {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+}
+
+.contactList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-sm;
+  background-color: $color-bg-tag;
+  border-radius: $radius-md;
+}
+
+.contactAvatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background-color: $color-bg-card;
+}
+
+.contactInfo {
+  flex: 1;
+  margin-left: $spacing-md;
+}
+
+.contactNameRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  margin-bottom: 4rpx;
+}
+
+.contactName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.contactPosition {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: 4rpx;
+}
+
+.contactPhone {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.arrow {
+  font-size: $font-size-xl;
+  color: $color-text-disabled;
+}
+
+.emptyState {
+  text-align: center;
+  padding: $spacing-xl 0;
+}
+
+.opportunityList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.opportunityItem {
+  padding: $spacing-md;
+  background-color: $color-bg-tag;
+  border-radius: $radius-md;
+}
+
+.oppHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-sm;
+}
+
+.oppTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  flex: 1;
+  margin-right: $spacing-sm;
+}
+
+.oppAmount {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: $spacing-xs;
+}
+
+.oppAmountValue {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+}
+
+.oppWinRate {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.oppFooter {
+  margin-top: $spacing-sm;
+}
+
+.oppDate {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.visitList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.visitItem {
+  display: flex;
+  align-items: flex-start;
+  padding: $spacing-md;
+  background-color: $color-bg-tag;
+  border-radius: $radius-md;
+}
+
+.visitDate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80rpx;
+  margin-right: $spacing-md;
+}
+
+.visitDateText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.visitTimeText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: 4rpx;
+}
+
+.visitContent {
+  flex: 1;
+}
+
+.visitPurpose {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.actionBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: $spacing-md $page-padding;
+  background-color: $color-bg-card;
+  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.06);
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+}
+
+.actionBtn {
+  flex: 1;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+}
+
+.primary {
+  background-color: $color-primary;
+  color: $color-text-white;
+}
+
+.secondary {
+  background-color: $color-bg-tag;
+  color: $color-text-primary;
+}

@@ -1,0 +1,401 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+  padding-bottom: 140rpx;
+}
+
+.header {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  padding: 48rpx $page-padding 80rpx;
+}
+
+.oppHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.oppAmount {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.oppTitle {
+  display: block;
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: $spacing-sm;
+}
+
+.oppMeta {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.oppMetaText {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.stageCard {
+  margin: -40rpx $page-padding $spacing-lg;
+  padding: $spacing-lg;
+  position: relative;
+  z-index: 1;
+}
+
+.cardTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.stageTimeline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-top: $spacing-sm;
+}
+
+.stageItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.stageDot {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background-color: $color-divider;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-xs;
+  color: $color-text-white;
+  margin-bottom: $spacing-xs;
+  z-index: 1;
+}
+
+.stageDot.active {
+  background-color: $color-success;
+}
+
+.stageDot.lost {
+  background-color: $color-error;
+}
+
+.stageLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  text-align: center;
+}
+
+.stageLabel.active {
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.stageLine {
+  position: absolute;
+  top: 18rpx;
+  left: 60%;
+  width: 80%;
+  height: 4rpx;
+  background-color: $color-divider;
+}
+
+.stageLine.active {
+  background-color: $color-success;
+}
+
+.updateStageBtn {
+  text-align: center;
+  margin-top: $spacing-lg;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.updateStageBtnText {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
+.customerCard {
+  margin: 0 $page-padding $spacing-lg;
+  padding: $spacing-lg;
+  display: flex;
+  align-items: center;
+}
+
+.customerInfo {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.customerAvatar {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: $radius-md;
+  background-color: $color-bg-tag;
+}
+
+.customerDetail {
+  flex: 1;
+  margin-left: $spacing-md;
+}
+
+.customerName {
+  display: block;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: 4rpx;
+}
+
+.customerDesc {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.arrow {
+  font-size: $font-size-xl;
+  color: $color-text-disabled;
+}
+
+.infoCard {
+  margin: 0 $page-padding $spacing-lg;
+  padding: $spacing-lg;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-sm 0;
+}
+
+.infoLabel {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+}
+
+.infoValue {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.infoDivider {
+  height: 1rpx;
+  background-color: $color-divider;
+  margin: $spacing-xs 0;
+}
+
+.followUpRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.followUpBtn {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  padding: 4rpx $spacing-sm;
+  background-color: $color-primary-light;
+  border-radius: $radius-xs;
+}
+
+.descCard {
+  margin: 0 $page-padding $spacing-lg;
+  padding: $spacing-lg;
+}
+
+.descText {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+}
+
+.competitorCard {
+  margin: 0 $page-padding $spacing-lg;
+  padding: $spacing-lg;
+}
+
+.competitorTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.quoteCard {
+  margin: 0 $page-padding $spacing-lg;
+  padding: $spacing-lg;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.addBtn {
+  padding: $spacing-xs $spacing-sm;
+  background-color: $color-primary-light;
+  border-radius: $radius-xs;
+}
+
+.addText {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
+.quoteList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.quoteItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md;
+  background-color: $color-bg-tag;
+  border-radius: $radius-md;
+}
+
+.quoteInfo {
+  flex: 1;
+}
+
+.quoteTitle {
+  display: block;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.quoteMeta {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.quoteDate {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.quoteAmount {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.quoteAmountValue {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+}
+
+.emptyState {
+  text-align: center;
+  padding: $spacing-xl 0;
+}
+
+.visitCard {
+  margin: 0 $page-padding $spacing-lg;
+  padding: $spacing-lg;
+}
+
+.moreText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.visitList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.visitItem {
+  display: flex;
+  align-items: flex-start;
+  padding: $spacing-md;
+  background-color: $color-bg-tag;
+  border-radius: $radius-md;
+}
+
+.visitDate {
+  width: 80rpx;
+  margin-right: $spacing-md;
+}
+
+.visitDateText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.visitContent {
+  flex: 1;
+}
+
+.visitPurpose {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.actionBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $page-padding;
+  background-color: $color-bg-card;
+  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.06);
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  z-index: 100;
+}
+
+.actionBtnSecondary {
+  flex: 1;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  background-color: $color-bg-tag;
+  color: $color-text-primary;
+}
+
+.actionBtnPrimary {
+  flex: 2;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  background-color: $color-primary;
+  color: $color-text-white;
+}

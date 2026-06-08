@@ -1,0 +1,269 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 120rpx;
+}
+
+.header {
+  background: $gradient-primary;
+  padding: 80rpx $page-padding $spacing-xl;
+  position: relative;
+}
+
+.userCard {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-xl;
+}
+
+.avatar {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: $radius-round;
+  margin-right: $spacing-lg;
+  border: 6rpx solid rgba(255, 255, 255, 0.3);
+}
+
+.userInfo {
+  flex: 1;
+}
+
+.userName {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: 8rpx;
+}
+
+.userPosition {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 4rpx;
+}
+
+.userDept {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.settingIcon {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &::before {
+    content: '⚙️';
+    font-size: 40rpx;
+  }
+}
+
+.statsCard {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  backdrop-filter: blur(10px);
+}
+
+.statsRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.statsLabel {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.9);
+  margin-right: auto;
+}
+
+.statsAmount {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.statsTarget {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.7);
+  margin-left: $spacing-xs;
+}
+
+.progressBar {
+  height: 16rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $radius-round;
+  overflow: hidden;
+  margin-bottom: $spacing-sm;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd700 0%, #ffb800 100%);
+  border-radius: $radius-round;
+  transition: width 0.3s ease;
+}
+
+.progressText {
+  display: flex;
+  justify-content: space-between;
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.section {
+  margin: $spacing-md $page-padding;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-lg;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.sectionMore {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-lg;
+  
+  &:active {
+    background: $color-bg-hover;
+  }
+  
+  &:not(:last-child) {
+    border-bottom: 1rpx solid $color-divider;
+  }
+}
+
+.menuIcon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $spacing-md;
+  font-size: 32rpx;
+  
+  &.performance {
+    background: linear-gradient(135deg, #e8f0ff 0%, #d4e3ff 100%);
+  }
+  
+  &.customer {
+    background: linear-gradient(135deg, #e8ffea 0%, #d4f7d7 100%);
+  }
+  
+  &.visit {
+    background: linear-gradient(135deg, #fff3e8 0%, #ffe4cc 100%);
+  }
+  
+  &.quote {
+    background: linear-gradient(135deg, #f3e8ff 0%, #e2ccff 100%);
+  }
+  
+  &.approval {
+    background: linear-gradient(135deg, #e8ffff 0%, #ccf2f2 100%);
+  }
+  
+  &.contact {
+    background: linear-gradient(135deg, #ffe8f0 0%, #ffccd9 100%);
+  }
+  
+  &.message {
+    background: linear-gradient(135deg, #f0ffe8 0%, #d9ffcc 100%);
+  }
+  
+  &.setting {
+    background: linear-gradient(135deg, #f5f6f7 0%, #e5e6eb 100%);
+  }
+}
+
+.menuContent {
+  flex: 1;
+}
+
+.menuTitle {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  margin-bottom: 4rpx;
+}
+
+.menuSubtitle {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.menuRight {
+  display: flex;
+  align-items: center;
+}
+
+.menuBadge {
+  min-width: 36rpx;
+  height: 36rpx;
+  background: $color-error;
+  border-radius: $radius-round;
+  font-size: 22rpx;
+  color: $color-text-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10rpx;
+  margin-right: $spacing-sm;
+  box-sizing: border-box;
+}
+
+.menuArrow {
+  font-size: $font-size-md;
+  color: $color-text-disabled;
+}
+
+.quickStats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: $spacing-lg 0;
+}
+
+.quickStatItem {
+  text-align: center;
+  
+  .statNum {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+    margin-bottom: 4rpx;
+  }
+  
+  .statLabel {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+  }
+  
+  &.success .statNum {
+    color: $color-success;
+  }
+  
+  &.warning .statNum {
+    color: $color-warning;
+  }
+}
