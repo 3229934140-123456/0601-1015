@@ -1,30 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, ScrollView } from '@tarojs/components';
-import Taro, { useRouter } from '@tarojs/taro';
-import { mockContacts, mockCustomers } from '@/data/mock';
+import Taro, { useRouter, useDidShow } from '@tarojs/taro';
+import { useCRMStore } from '@/store';
 import Tag from '@/components/Tag';
 import Card from '@/components/Card';
 import { formatDate } from '@/utils';
 import styles from './index.module.scss';
-import type { Contact } from '@/types';
+import type { Contact, Customer } from '@/types';
 
 const ContactDetailPage: React.FC = () => {
   const router = useRouter();
   const contactId = router.params.id;
+
+  const contacts = useCRMStore((state) => state.contacts);
+  const customers = useCRMStore((state) => state.customers);
   
   const [contact, setContact] = useState<Contact | null>(null);
-  const [customer, setCustomer] = useState<any>(null);
+  const [customer, setCustomer] = useState<Customer | null>(null);
 
-  useEffect(() => {
+  const loadData = () => {
     if (contactId) {
-      const found = mockContacts.find(c => c.id === contactId);
+      const found = contacts.find(c => c.id === contactId);
       if (found) {
         setContact(found);
-        const cust = mockCustomers.find(c => c.id === found.customerId);
-        setCustomer(cust);
+        const cust = customers.find(c => c.id === found.customerId);
+        setCustomer(cust || null);
       }
     }
-  }, [contactId]);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [contactId, contacts, customers]);
+
+  useDidShow(() => {
+    loadData();
+  });
 
   const handleCall = () => {
     if (contact?.phone) {
@@ -51,7 +62,7 @@ const ContactDetailPage: React.FC = () => {
   };
 
   const handleEdit = () => {
-    Taro.showToast({ title: '编辑联系人功能', icon: 'none' });
+    Taro.navigateTo({ url: `/pages/contact-edit/index?id=${contactId}` });
   };
 
   if (!contact) {
@@ -140,7 +151,7 @@ const ContactDetailPage: React.FC = () => {
           </View>
         </View>
         {contact.wechat && (
-          <>
+          <React.Fragment>
             <View className={styles.infoDivider} />
             <View className={styles.infoRow}>
               <Text className={styles.infoLabel}>💚 微信号</Text>
@@ -149,7 +160,7 @@ const ContactDetailPage: React.FC = () => {
                 <Text className={styles.infoAction} onClick={handleWechat}>添加</Text>
               </View>
             </View>
-          </>
+          </React.Fragment>
         )}
       </Card>
 
@@ -170,13 +181,10 @@ const ContactDetailPage: React.FC = () => {
         </Card>
       )}
 
-      {/* 备注 */}
-      <Card className={styles.remarkCard}>
-        <Text className={styles.cardTitle}>备注</Text>
-        <Text className={styles.remarkText}>
-          关键决策人，对项目有最终话语权。偏好技术方案的创新性和实施团队的专业性。
-        </Text>
-      </Card>
+      {/* 编辑按钮 */}
+      <View className={styles.editBtn} onClick={handleEdit}>
+        <Text className={styles.editBtnText}>编辑联系人</Text>
+      </View>
 
       <View style={{ height: '120rpx' }} />
     </ScrollView>

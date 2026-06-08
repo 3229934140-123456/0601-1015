@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, Image, Textarea } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
-import { mockVisits } from '@/data/mock';
+import { useCRMStore } from '@/store';
 import { formatDateTime } from '@/utils';
 import styles from './index.module.scss';
 import type { Visit } from '@/types';
@@ -9,16 +9,23 @@ import type { Visit } from '@/types';
 const CheckInPage: React.FC = () => {
   const router = useRouter();
   const visitId = router.params.id;
+  const customerId = router.params.customerId;
   
   const [visit, setVisit] = useState<Visit | null>(null);
   const [status, setStatus] = useState<'pending' | 'checkedin' | 'completed'>('pending');
   const [notes, setNotes] = useState('');
   const [photos, setPhotos] = useState<{ url: string; type: string }[]>([]);
   const [checkInTime, setCheckInTime] = useState('');
+  const [createdVisitId, setCreatedVisitId] = useState<string | null>(null);
+
+  const customers = useCRMStore((state) => state.customers);
+  const storeVisits = useCRMStore((state) => state.visits);
+  const addVisit = useCRMStore((state) => state.addVisit);
+  const completeVisit = useCRMStore((state) => state.completeVisit);
 
   useEffect(() => {
     if (visitId) {
-      const found = mockVisits.find(v => v.id === visitId);
+      const found = storeVisits.find(v => v.id === visitId);
       if (found) {
         setVisit(found);
         if (found.status === 'completed') {
@@ -28,12 +35,28 @@ const CheckInPage: React.FC = () => {
           setCheckInTime(found.checkInTime || '');
         }
       }
+    } else if (customerId) {
+      const customer = customers.find(c => c.id === customerId);
+      if (customer) {
+        const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
+        const newVisit: Omit<Visit, 'id'> = {
+          customerId: customer.id,
+          customerName: customer.name,
+          customerAvatar: customer.avatar,
+          planTime: now,
+          status: 'pending',
+          purpose: '临时拜访',
+          location: customer.address,
+          distance: 0
+        };
+        const created = addVisit(newVisit);
+        setVisit(created);
+        setCreatedVisitId(created.id);
+      }
     }
-    console.log('[CheckIn] Page loaded with visitId:', visitId);
-  }, [visitId]);
+  }, [visitId, customerId, storeVisits, customers, addVisit]);
 
   const handleCheckIn = useCallback(() => {
-    console.log('[CheckIn] Check in');
     const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
     setCheckInTime(now);
     setStatus('checkedin');
@@ -41,7 +64,6 @@ const CheckInPage: React.FC = () => {
   }, []);
 
   const handleAddPhoto = useCallback((type: string) => {
-    console.log('[CheckIn] Add photo:', type);
     const newPhoto = {
       url: `https://picsum.photos/id/${Math.floor(Math.random() * 100)}/400/300`,
       type
@@ -50,12 +72,10 @@ const CheckInPage: React.FC = () => {
   }, []);
 
   const handleDeletePhoto = useCallback((index: number) => {
-    console.log('[CheckIn] Delete photo:', index);
     setPhotos(prev => prev.filter((_, i) => i !== index));
   }, []);
 
   const handleSubmit = useCallback(() => {
-    console.log('[CheckIn] Submit visit notes');
     if (!notes.trim()) {
       Taro.showToast({ title: '请填写拜访纪要', icon: 'none' });
       return;
@@ -65,6 +85,16 @@ const CheckInPage: React.FC = () => {
       content: '确认提交拜访纪要并完成本次拜访？',
       success: (res) => {
         if (res.confirm) {
+          const targetId = visit?.id || createdVisitId;
+          if (targetId) {
+            const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            completeVisit(targetId, {
+              notes,
+              photos: photos.map(p => p.url),
+              checkInTime: checkInTime || now,
+              checkOutTime: now
+            });
+          }
           setStatus('completed');
           Taro.showToast({ title: '拜访已完成', icon: 'success' });
           setTimeout(() => {
@@ -73,7 +103,7 @@ const CheckInPage: React.FC = () => {
         }
       }
     });
-  }, [notes]);
+  }, [notes, photos, checkInTime, visit, createdVisitId, completeVisit]);
 
   const handleNotesChange = useCallback((e: any) => {
     setNotes(e.detail.value);
@@ -109,7 +139,7 @@ const CheckInPage: React.FC = () => {
         <View className={styles.locationInfo}>
           <Text className={styles.locationIcon}>📍</Text>
           <Text className={styles.locationText}>{visit.location}</Text>
-          {visit.distance && (
+          {visit.distance && visit.distance > 0 && (
             <Text className={styles.distanceText}>{visit.distance}km</Text>
           )}
         </View>

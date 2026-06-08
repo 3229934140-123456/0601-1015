@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
-import Taro from '@tarojs/taro';
-import { mockMessages } from '@/data/mock';
+import Taro, { useDidShow } from '@tarojs/taro';
+import { useCRMStore } from '@/store';
 import Tag from '@/components/Tag';
 import { formatRelativeTime } from '@/utils';
 import styles from './index.module.scss';
 import type { Message } from '@/types';
 
 const MessagesPage: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>(mockMessages);
+  const storeMessages = useCRMStore((state) => state.messages);
+  const markMessageRead = useCRMStore((state) => state.markMessageRead);
+  const markAllMessagesRead = useCRMStore((state) => state.markAllMessagesRead);
+
+  const [messages, setMessages] = useState<Message[]>(storeMessages);
   const [activeTab, setActiveTab] = useState<string>('all');
+
+  useEffect(() => {
+    setMessages(storeMessages);
+  }, [storeMessages]);
+
+  useDidShow(() => {
+    setMessages(storeMessages);
+  });
 
   const tabs = [
     { key: 'all', label: '全部' },
@@ -35,9 +47,7 @@ const MessagesPage: React.FC = () => {
 
   const handleMessageClick = (msg: Message) => {
     if (!msg.read) {
-      setMessages(prev => prev.map(m =>
-        m.id === msg.id ? { ...m, read: true } : m
-      ));
+      markMessageRead(msg.id);
     }
 
     if (msg.relatedType && msg.relatedId) {
@@ -61,7 +71,7 @@ const MessagesPage: React.FC = () => {
       content: '确认将所有消息标记为已读？',
       success: (res) => {
         if (res.confirm) {
-          setMessages(prev => prev.map(m => ({ ...m, read: true })));
+          markAllMessagesRead();
           Taro.showToast({ title: '已全部标记为已读', icon: 'success' });
         }
       }

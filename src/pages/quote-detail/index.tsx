@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
-import Taro, { useRouter } from '@tarojs/taro';
-import { mockQuotes } from '@/data/mock';
+import Taro, { useRouter, useDidShow } from '@tarojs/taro';
+import { useCRMStore } from '@/store';
 import Tag from '@/components/Tag';
 import Card from '@/components/Card';
 import { getQuoteStatusText, formatDate, formatMoney } from '@/utils';
@@ -11,17 +11,39 @@ import type { Quote } from '@/types';
 const QuoteDetailPage: React.FC = () => {
   const router = useRouter();
   const quoteId = router.params.id;
-  
+
+  const quotes = useCRMStore((state) => state.quotes);
+  const submitQuoteForApproval = useCRMStore((state) => state.submitQuoteForApproval);
+  const revokeQuote = useCRMStore((state) => state.revokeQuote);
+
   const [quote, setQuote] = useState<Quote | null>(null);
 
-  useEffect(() => {
+  const loadData = () => {
     if (quoteId) {
-      const found = mockQuotes.find(q => q.id === quoteId);
+      const found = quotes.find(q => q.id === quoteId);
       if (found) {
         setQuote(found);
       }
     }
-  }, [quoteId]);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [quoteId, quotes]);
+
+  useDidShow(() => {
+    loadData();
+  });
+
+  const statusType = quote
+    ? quote.status === 'approved'
+      ? 'success'
+      : quote.status === 'submitted'
+        ? 'warning'
+        : quote.status === 'draft'
+          ? 'default'
+          : 'error'
+    : 'default';
 
   const handleViewOpportunity = () => {
     if (quote?.opportunityId) {
@@ -40,7 +62,8 @@ const QuoteDetailPage: React.FC = () => {
       title: '提交审批',
       content: '确认提交此报价单给主管审批？',
       success: (res) => {
-        if (res.confirm) {
+        if (res.confirm && quoteId) {
+          submitQuoteForApproval(quoteId);
           Taro.showToast({ title: '已提交审批', icon: 'success' });
         }
       }
@@ -48,7 +71,50 @@ const QuoteDetailPage: React.FC = () => {
   };
 
   const handleRevoke = () => {
-    Taro.showToast({ title: '撤回功能', icon: 'none' });
+    Taro.showModal({
+      title: '撤回审批',
+      content: '确认撤回此报价单的审批申请？',
+      success: (res) => {
+        if (res.confirm && quoteId) {
+          revokeQuote(quoteId);
+          Taro.showToast({ title: '已撤回', icon: 'success' });
+        }
+      }
+    });
+  };
+
+  const handleExportPDF = () => {
+    Taro.showModal({
+      title: '导出报价单',
+      content: '报价单摘要已生成，是否查看？',
+      confirmText: '查看',
+      cancelText: '取消',
+      success: (res) => {
+        if (res.confirm && quote) {
+          const summary = `
+报价单号：${quote.id.toUpperCase()}
+报价标题：${quote.title}
+客户名称：${quote.customerName}
+报价金额：¥${formatMoney(quote.amount)}
+创建时间：${formatDate(quote.createdAt)}
+有效期至：${formatDate(quote.validUntil)}
+状态：${getQuoteStatusText(quote.status)}
+
+报价明细：
+${quote.items.map((item, i) => `${i + 1}. ${item.name}  ${item.quantity}×¥${formatMoney(item.unitPrice)} = ¥${formatMoney(item.totalPrice)}`).join('\n')}
+
+合计：¥${formatMoney(quote.amount)}
+          `.trim();
+          
+          Taro.setClipboardData({
+            data: summary,
+            success: () => {
+              Taro.showToast({ title: '已复制到剪贴板', icon: 'success', duration: 2000 });
+            }
+          });
+        }
+      }
+    });
   };
 
   if (!quote) {
@@ -60,8 +126,6 @@ const QuoteDetailPage: React.FC = () => {
       </View>
     );
   }
-
-  const statusType = quote.status === 'approved' ? 'success' : quote.status === 'submitted' ? 'warning' : quote.status === 'draft' ? 'default' : 'error';
 
   return (
     <React.Fragment>
@@ -126,34 +190,36 @@ const QuoteDetailPage: React.FC = () => {
           <Text className={styles.infoValue}>{formatDate(quote.validUntil)}</Text>
         </View>
         {quote.approver && (
-          <>
+          <React.Fragment>
             <View className={styles.infoDivider} />
             <View className={styles.infoRow}>
               <Text className={styles.infoLabel}>审批人</Text>
               <Text className={styles.infoValue}>{quote.approver}</Text>
             </View>
-          </>
+          </React.Fragment>
         )}
         {quote.approvalAt && (
-          <>
+          <React.Fragment>
             <View className={styles.infoDivider} />
             <View className={styles.infoRow}>
               <Text className={styles.infoLabel}>审批时间</Text>
               <Text className={styles.infoValue}>{formatDate(quote.approvalAt)}</Text>
             </View>
-          </>
+          </React.Fragment>
         )}
       </Card>
 
       {/* 相关商机 */}
-      <Card className={styles.oppCard} onClick={handleViewOpportunity}>
-        <View className={styles.cardHeader}>
-          <Text className={styles.cardTitle}>相关商机</Text>
-          <Text className={styles.arrowText}>查看 ›</Text>
-        </View>
-        <Text className={styles.oppName}>{quote.title}</Text>
-        <Text className={styles.oppAmount}>商机金额：¥{formatMoney(quote.amount)}</Text>
-      </Card>
+      {quote.opportunityId && (
+        <Card className={styles.oppCard} onClick={handleViewOpportunity}>
+          <View className={styles.cardHeader}>
+            <Text className={styles.cardTitle}>相关商机</Text>
+            <Text className={styles.arrowText}>查看 ›</Text>
+          </View>
+          <Text className={styles.oppName}>{quote.title}</Text>
+          <Text className={styles.oppAmount}>商机金额：¥{formatMoney(quote.amount)}</Text>
+        </Card>
+      )}
 
       <View style={{ height: '160rpx' }} />
     </ScrollView>
@@ -161,27 +227,27 @@ const QuoteDetailPage: React.FC = () => {
     {/* 底部操作栏 */}
     <View className={styles.actionBar}>
       {quote.status === 'draft' && (
-        <>
+        <React.Fragment>
           <View className={`${styles.actionBtn} ${styles.secondary}`} onClick={() => Taro.showToast({ title: '编辑功能', icon: 'none' })}>
             编辑
           </View>
           <View className={`${styles.actionBtn} ${styles.primary}`} onClick={handleSubmit}>
             提交审批
           </View>
-        </>
+        </React.Fragment>
       )}
       {quote.status === 'submitted' && (
-        <>
+        <React.Fragment>
           <View className={`${styles.actionBtn} ${styles.secondary}`} onClick={handleRevoke}>
             撤回
           </View>
           <View className={`${styles.actionBtn} ${styles.primary}`} onClick={() => Taro.showToast({ title: '分享功能', icon: 'none' })}>
             分享
           </View>
-        </>
+        </React.Fragment>
       )}
       {(quote.status === 'approved' || quote.status === 'rejected') && (
-        <View className={`${styles.actionBtn} ${styles.primary}`} onClick={() => Taro.showToast({ title: '导出PDF功能', icon: 'none' })}>
+        <View className={`${styles.actionBtn} ${styles.primary}`} onClick={handleExportPDF}>
           导出PDF
         </View>
       )}

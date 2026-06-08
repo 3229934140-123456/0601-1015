@@ -1,0 +1,216 @@
+@import '@/styles/variables.scss';
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 160rpx;
+}
+
+.section {
+  background: $color-bg-card;
+  margin: 24rpx;
+  border-radius: $radius-lg;
+  padding: 24rpx;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: 16rpx;
+}
+
+.sectionHeader .sectionTitle {
+  margin-bottom: 0;
+}
+
+.selectedCount {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}
+
+.visitList {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.visitItem {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 12rpx 0;
+}
+
+.visitTime {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-primary;
+  min-width: 80rpx;
+}
+
+.visitName {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-disabled;
+  text-align: center;
+  padding: 32rpx 0;
+}
+
+.customerList {
+  max-height: 400rpx;
+}
+
+.customerItem {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid $color-border-light;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:active {
+    background: $color-bg-secondary;
+  }
+
+  &.selected {
+    background: $color-bg-tag;
+  }
+}
+
+.checkbox {
+  width: 40rpx;
+  height: 40rpx;
+  border: 2rpx solid $color-border;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .selected & {
+    background: $color-primary;
+    border-color: $color-primary;
+  }
+}
+
+.checkmark {
+  color: $color-text-white;
+  font-size: $font-size-sm;
+}
+
+.customerAvatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: $radius-md;
+}
+
+.customerInfo {
+  flex: 1;
+}
+
+.customerName {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  margin-bottom: 4rpx;
+}
+
+.customerAddr {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 400rpx;
+}
+
+.routeList {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.routeItem {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.routeIndex {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: $gradient-primary;
+  color: $color-text-white;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.routeInfo {
+  flex: 1;
+}
+
+.routeTime {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.routeName {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-top: 4rpx;
+}
+
+.actionBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24rpx 32rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  background: $color-bg-card;
+  border-top: 1rpx solid $color-border-light;
+  display: flex;
+  gap: 24rpx;
+}
+
+.secondaryBtn {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  background: $color-bg-secondary;
+  color: $color-text-secondary;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-button;
+}
+
+.primaryBtn {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  background: $gradient-primary;
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-button;
+}

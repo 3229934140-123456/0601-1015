@@ -1,20 +1,24 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, Image, ScrollView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
-import { usePullDownRefresh } from '@tarojs/taro';
-import { mockVisits } from '@/data/mock';
+import { usePullDownRefresh, useDidShow } from '@tarojs/taro';
+import { useCRMStore } from '@/store';
 import { getVisitStatusText, formatDate } from '@/utils';
 import styles from './index.module.scss';
 import type { Visit } from '@/types';
 
 const VisitsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('today');
-  const [visits, setVisits] = useState<Visit[]>(mockVisits);
+  const visits = useCRMStore((state) => state.visits);
 
   usePullDownRefresh(() => {
     setTimeout(() => {
       Taro.stopPullDownRefresh();
-    }, 1000);
+    }, 500);
+  });
+
+  useDidShow(() => {
+    // 页面显示时刷新数据
   });
 
   const tabs = [
@@ -23,9 +27,11 @@ const VisitsPage: React.FC = () => {
     { key: 'all', label: '全部' }
   ];
 
+  const todayStr = '2026-06-08';
+
   const filteredVisits = useMemo(() => {
     if (activeTab === 'today') {
-      return visits.filter(v => v.planTime.startsWith('2026-06-08'));
+      return visits.filter(v => v.planTime.startsWith(todayStr));
     }
     if (activeTab === 'week') {
       return visits.filter(v => v.status === 'pending');
@@ -42,33 +48,29 @@ const VisitsPage: React.FC = () => {
   }, [filteredVisits]);
 
   const stats = useMemo(() => {
-    const todayVisits = visits.filter(v => v.planTime.startsWith('2026-06-08'));
+    const todayVisits = visits.filter(v => v.planTime.startsWith(todayStr));
     const completed = todayVisits.filter(v => v.status === 'completed').length;
     const pending = todayVisits.filter(v => v.status === 'pending').length;
     return { total: todayVisits.length, completed, pending };
   }, [visits]);
 
   const handleVisitClick = useCallback((visitId: string, status: string) => {
-    console.log('[Visits] Visit clicked:', visitId, status);
     if (status === 'pending') {
       Taro.navigateTo({ url: `/pages/check-in/index?id=${visitId}` });
-    } else {
-      Taro.showToast({ title: '查看拜访详情', icon: 'none' });
+    } else if (status === 'completed') {
+      Taro.navigateTo({ url: `/pages/check-in/index?id=${visitId}` });
     }
   }, []);
 
   const handleAddVisit = useCallback(() => {
-    console.log('[Visits] Add visit');
-    Taro.showToast({ title: '新建拜访功能开发中', icon: 'none' });
+    Taro.navigateTo({ url: '/pages/visit-edit/index' });
   }, []);
 
   const handleRoutePlan = useCallback(() => {
-    console.log('[Visits] Route plan');
-    Taro.showToast({ title: '路线规划功能开发中', icon: 'none' });
+    Taro.navigateTo({ url: '/pages/route-plan/index' });
   }, []);
 
   const handleCheckIn = useCallback((visitId: string) => {
-    console.log('[Visits] Check in:', visitId);
     Taro.navigateTo({ url: `/pages/check-in/index?id=${visitId}` });
   }, []);
 
@@ -156,7 +158,7 @@ const VisitsPage: React.FC = () => {
 
                     <View className={styles.visitFooter}>
                       <Text className={styles.visitLocation}>📍 {visit.location}</Text>
-                      {visit.distance && (
+                      {visit.distance && visit.distance > 0 && (
                         <Text className={styles.visitDistance}>{visit.distance}km</Text>
                       )}
                       {visit.status === 'pending' && (

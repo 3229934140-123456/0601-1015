@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, ScrollView } from '@tarojs/components';
-import Taro, { useRouter } from '@tarojs/taro';
-import { mockCustomers, mockContacts, mockVisits, mockOpportunities } from '@/data/mock';
+import Taro, { useRouter, useDidShow } from '@tarojs/taro';
+import { useCRMStore } from '@/store';
 import Tag from '@/components/Tag';
 import Card from '@/components/Card';
 import { getLevelText, getStageText, formatDate, formatMoney } from '@/utils';
@@ -12,22 +12,35 @@ const CustomerDetailPage: React.FC = () => {
   const router = useRouter();
   const customerId = router.params.id;
   
+  const customers = useCRMStore((state) => state.customers);
+  const contacts = useCRMStore((state) => state.contacts);
+  const visits = useCRMStore((state) => state.visits);
+  const opportunities = useCRMStore((state) => state.opportunities);
+  
   const [customer, setCustomer] = useState<Customer | null>(null);
-  const [contacts, setContacts] = useState<Contact[]>([]);
-  const [visits, setVisits] = useState<Visit[]>([]);
-  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
+  const [customerContacts, setCustomerContacts] = useState<Contact[]>([]);
+  const [customerVisits, setCustomerVisits] = useState<Visit[]>([]);
+  const [customerOpportunities, setCustomerOpportunities] = useState<Opportunity[]>([]);
 
-  useEffect(() => {
+  const loadData = () => {
     if (customerId) {
-      const found = mockCustomers.find(c => c.id === customerId);
+      const found = customers.find(c => c.id === customerId);
       if (found) {
         setCustomer(found);
-        setContacts(mockContacts.filter(c => c.customerId === customerId));
-        setVisits(mockVisits.filter(v => v.customerId === customerId).slice(0, 3));
-        setOpportunities(mockOpportunities.filter(o => o.customerId === customerId));
+        setCustomerContacts(contacts.filter(c => c.customerId === customerId));
+        setCustomerVisits(visits.filter(v => v.customerId === customerId).slice(0, 3));
+        setCustomerOpportunities(opportunities.filter(o => o.customerId === customerId));
       }
     }
-  }, [customerId]);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [customerId, customers, contacts, visits, opportunities]);
+
+  useDidShow(() => {
+    loadData();
+  });
 
   const handleCall = () => {
     if (customer?.phone) {
@@ -44,7 +57,7 @@ const CustomerDetailPage: React.FC = () => {
   };
 
   const handleAddContact = () => {
-    Taro.showToast({ title: '新增联系人功能', icon: 'none' });
+    Taro.navigateTo({ url: `/pages/contact-edit/index?customerId=${customerId}` });
   };
 
   const handleViewOpportunity = (id: string) => {
@@ -98,12 +111,12 @@ const CustomerDetailPage: React.FC = () => {
         </View>
         <View className={styles.statDivider} />
         <View className={styles.statItem}>
-          <Text className={styles.statValue}>{customer.opportunityCount}</Text>
+          <Text className={styles.statValue}>{customerOpportunities.length}</Text>
           <Text className={styles.statLabel}>商机数量</Text>
         </View>
         <View className={styles.statDivider} />
         <View className={styles.statItem}>
-          <Text className={styles.statValue}>{visits.length}</Text>
+          <Text className={styles.statValue}>{customerVisits.length}</Text>
           <Text className={styles.statLabel}>拜访记录</Text>
         </View>
       </View>
@@ -145,9 +158,9 @@ const CustomerDetailPage: React.FC = () => {
             <Text className={styles.addText}>+ 新增</Text>
           </View>
         </View>
-        {contacts.length > 0 ? (
+        {customerContacts.length > 0 ? (
           <View className={styles.contactList}>
-            {contacts.map(contact => (
+            {customerContacts.map(contact => (
               <View
                 key={contact.id}
                 className={styles.contactItem}
@@ -187,9 +200,9 @@ const CustomerDetailPage: React.FC = () => {
             全部 ›
           </Text>
         </View>
-        {opportunities.length > 0 ? (
+        {customerOpportunities.length > 0 ? (
           <View className={styles.opportunityList}>
-            {opportunities.slice(0, 3).map(opp => (
+            {customerOpportunities.slice(0, 3).map(opp => (
               <View
                 key={opp.id}
                 className={styles.opportunityItem}
@@ -222,9 +235,9 @@ const CustomerDetailPage: React.FC = () => {
           <Text className={styles.cardTitle}>最近拜访</Text>
           <Text className={styles.moreText} onClick={handleViewAllVisits}>全部 ›</Text>
         </View>
-        {visits.length > 0 ? (
+        {customerVisits.length > 0 ? (
           <View className={styles.visitList}>
-            {visits.map(visit => (
+            {customerVisits.map(visit => (
               <View key={visit.id} className={styles.visitItem}>
                 <View className={styles.visitDate}>
                   <Text className={styles.visitDateText}>{formatDate(visit.planTime, 'MM-DD')}</Text>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, ScrollView } from '@tarojs/components';
-import Taro, { useRouter } from '@tarojs/taro';
-import { mockOpportunities, mockCustomers, mockQuotes, mockVisits } from '@/data/mock';
+import { View, Text, Image, ScrollView, Picker } from '@tarojs/components';
+import Taro, { useRouter, useDidShow } from '@tarojs/taro';
+import { useCRMStore } from '@/store';
 import Tag from '@/components/Tag';
 import Card from '@/components/Card';
 import { getStageText, formatDate, formatMoney, formatPercent } from '@/utils';
@@ -12,10 +12,25 @@ const OpportunityDetailPage: React.FC = () => {
   const router = useRouter();
   const opportunityId = router.params.id;
   
+  const opportunities = useCRMStore((state) => state.opportunities);
+  const customers = useCRMStore((state) => state.customers);
+  const quotes = useCRMStore((state) => state.quotes);
+  const visits = useCRMStore((state) => state.visits);
+  const updateOpportunityStage = useCRMStore((state) => state.updateOpportunityStage);
+  const updateOpportunity = useCRMStore((state) => state.updateOpportunity);
+  const syncOpportunityForApproval = useCRMStore((state) => state.syncOpportunityForApproval);
+
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [customer, setCustomer] = useState<any>(null);
-  const [quotes, setQuotes] = useState<Quote[]>([]);
-  const [visits, setVisits] = useState<Visit[]>([]);
+  const [opportunityQuotes, setOpportunityQuotes] = useState<Quote[]>([]);
+  const [customerVisits, setCustomerVisits] = useState<Visit[]>([]);
+  const [showStagePicker, setShowStagePicker] = useState(false);
+  const [showFollowUpPicker, setShowFollowUpPicker] = useState(false);
+  const [selectedStage, setSelectedStage] = useState('');
+  const [followUpDate, setFollowUpDate] = useState('');
+  const [followUpTime, setFollowUpTime] = useState('10:00');
+  const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
+  const [syncStatus, setSyncStatus] = useState<string | null>(null);
 
   const stages = [
     { key: 'lead', label: '线索' },
@@ -27,18 +42,28 @@ const OpportunityDetailPage: React.FC = () => {
     { key: 'lost', label: '输单' }
   ];
 
-  useEffect(() => {
+  const loadData = () => {
     if (opportunityId) {
-      const found = mockOpportunities.find(o => o.id === opportunityId);
+      const found = opportunities.find(o => o.id === opportunityId);
       if (found) {
         setOpportunity(found);
-        const cust = mockCustomers.find(c => c.id === found.customerId);
+        const cust = customers.find(c => c.id === found.customerId);
         setCustomer(cust);
-        setQuotes(mockQuotes.filter(q => q.opportunityId === opportunityId));
-        setVisits(mockVisits.filter(v => v.customerId === found.customerId).slice(0, 3));
+        setOpportunityQuotes(quotes.filter(q => q.opportunityId === opportunityId));
+        setCustomerVisits(visits.filter(v => v.customerId === found.customerId).slice(0, 3));
+        setFollowUpDate(found.nextFollowUp.slice(0, 10));
+        setFollowUpTime(found.nextFollowUp.slice(11, 16) || '10:00');
       }
     }
-  }, [opportunityId]);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [opportunityId, opportunities, customers, quotes, visits]);
+
+  useDidShow(() => {
+    loadData();
+  });
 
   const currentStageIndex = stages.findIndex(s => s.key === opportunity?.stage);
 
@@ -53,15 +78,46 @@ const OpportunityDetailPage: React.FC = () => {
   };
 
   const handleAddQuote = () => {
-    Taro.showToast({ title: '创建报价单功能', icon: 'none' });
+    Taro.navigateTo({ url: `/pages/quote-edit/index?opportunityId=${opportunityId}` });
   };
 
   const handleUpdateStage = () => {
-    Taro.showToast({ title: '更新阶段功能', icon: 'none' });
+    setSelectedStage(opportunity?.stage || 'lead');
+    setShowStagePicker(true);
+  };
+
+  const handleStageChange = (e: any) => {
+    const stageIndex = parseInt(e.detail.value);
+    setSelectedStage(stages[stageIndex].key);
+  };
+
+  const handleConfirmStage = () => {
+    if (opportunityId && selectedStage) {
+      updateOpportunityStage(opportunityId, selectedStage as any);
+      Taro.showToast({ title: '阶段已更新', icon: 'success' });
+      setShowStagePicker(false);
+    }
   };
 
   const handleSetFollowUp = () => {
-    Taro.showToast({ title: '设置下次跟进功能', icon: 'none' });
+    setShowFollowUpPicker(true);
+  };
+
+  const handleFollowUpDateChange = (e: any) => {
+    setFollowUpDate(e.detail.value);
+  };
+
+  const handleFollowUpTimeChange = (e: any) => {
+    setFollowUpTime(e.detail.value);
+  };
+
+  const handleConfirmFollowUp = () => {
+    if (opportunityId && followUpDate) {
+      const followUpStr = `${followUpDate} ${followUpTime}`;
+      updateOpportunity(opportunityId, { nextFollowUp: followUpStr });
+      Taro.showToast({ title: '跟进时间已更新', icon: 'success' });
+      setShowFollowUpPicker(false);
+    }
   };
 
   const handleSubmitForApproval = () => {
@@ -70,7 +126,13 @@ const OpportunityDetailPage: React.FC = () => {
       content: '确认将此商机同步给主管审批？',
       success: (res) => {
         if (res.confirm) {
-          Taro.showToast({ title: '已同步给主管', icon: 'success' });
+          if (opportunityId) {
+            syncOpportunityForApproval(opportunityId);
+            const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
+            setLastSyncTime(now);
+            setSyncStatus('pending');
+            Taro.showToast({ title: '已同步给主管', icon: 'success' });
+          }
         }
       }
     });
@@ -137,6 +199,19 @@ const OpportunityDetailPage: React.FC = () => {
         </View>
       </Card>
 
+      {/* 同步信息 */}
+      {lastSyncTime && (
+        <Card className={styles.syncCard}>
+          <View className={styles.syncRow}>
+            <Text className={styles.syncLabel}>最近同步</Text>
+            <View className={styles.syncInfo}>
+              <Tag text={syncStatus === 'pending' ? '待审批' : '已同步'} type={syncStatus === 'pending' ? 'warning' : 'success'} size="sm" />
+              <Text className={styles.syncTime}>{lastSyncTime}</Text>
+            </View>
+          </View>
+        </Card>
+      )}
+
       {/* 客户信息 */}
       <Card className={styles.customerCard} onClick={handleViewCustomer}>
         <View className={styles.customerInfo}>
@@ -201,9 +276,9 @@ const OpportunityDetailPage: React.FC = () => {
             <Text className={styles.addText}>+ 新建</Text>
           </View>
         </View>
-        {quotes.length > 0 ? (
+        {opportunityQuotes.length > 0 ? (
           <View className={styles.quoteList}>
-            {quotes.map(quote => (
+            {opportunityQuotes.map(quote => (
               <View
                 key={quote.id}
                 className={styles.quoteItem}
@@ -245,9 +320,9 @@ const OpportunityDetailPage: React.FC = () => {
             全部 ›
           </Text>
         </View>
-        {visits.length > 0 ? (
+        {customerVisits.length > 0 ? (
           <View className={styles.visitList}>
-            {visits.map(visit => (
+            {customerVisits.map(visit => (
               <View key={visit.id} className={styles.visitItem}>
                 <View className={styles.visitDate}>
                   <Text className={styles.visitDateText}>{formatDate(visit.planTime, 'MM-DD')}</Text>
@@ -271,6 +346,54 @@ const OpportunityDetailPage: React.FC = () => {
       </Card>
 
       <View style={{ height: '160rpx' }} />
+
+      {/* 阶段选择弹窗 */}
+      {showStagePicker && (
+        <View className={styles.modalMask} onClick={() => setShowStagePicker(false)}>
+          <View className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <View className={styles.modalHeader}>
+              <Text className={styles.modalCancel} onClick={() => setShowStagePicker(false)}>取消</Text>
+              <Text className={styles.modalTitle}>选择阶段</Text>
+              <Text className={styles.modalConfirm} onClick={handleConfirmStage}>确定</Text>
+            </View>
+            <Picker
+              mode="selector"
+              range={stages.map(s => s.label)}
+              value={stages.findIndex(s => s.key === selectedStage)}
+              onChange={handleStageChange}
+            >
+              <View className={styles.pickerView}>
+                <Text className={styles.pickerText}>{getStageText(selectedStage)}</Text>
+              </View>
+            </Picker>
+          </View>
+        </View>
+      )}
+
+      {/* 跟进时间设置弹窗 */}
+      {showFollowUpPicker && (
+        <View className={styles.modalMask} onClick={() => setShowFollowUpPicker(false)}>
+          <View className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <View className={styles.modalHeader}>
+              <Text className={styles.modalCancel} onClick={() => setShowFollowUpPicker(false)}>取消</Text>
+              <Text className={styles.modalTitle}>设置下次跟进</Text>
+              <Text className={styles.modalConfirm} onClick={handleConfirmFollowUp}>确定</Text>
+            </View>
+            <View className={styles.dateTimePicker}>
+              <Picker mode="date" value={followUpDate} onChange={handleFollowUpDateChange}>
+                <View className={styles.datePickerItem}>
+                  <Text className={styles.datePickerText}>{followUpDate}</Text>
+                </View>
+              </Picker>
+              <Picker mode="time" value={followUpTime} onChange={handleFollowUpTimeChange}>
+                <View className={styles.datePickerItem}>
+                  <Text className={styles.datePickerText}>{followUpTime}</Text>
+                </View>
+              </Picker>
+            </View>
+          </View>
+        </View>
+      )}
 
       {/* 底部操作栏 */}
       <View className={styles.actionBar}>

@@ -214,6 +214,20 @@
   line-height: $line-height-loose;
 }
 
+.editBtn {
+  margin: 0 $page-padding;
+  padding: $spacing-md;
+  background-color: $color-bg-card;
+  border-radius: $radius-md;
+  text-align: center;
+}
+
+.editBtnText {
+  font-size: $font-size-md;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
 .actionBar {
   position: fixed;
   bottom: 0;

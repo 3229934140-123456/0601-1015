@@ -11,7 +11,11 @@ export default defineAppConfig({
     'pages/quote-detail/index',
     'pages/contact-detail/index',
     'pages/messages/index',
-    'pages/performance/index'
+    'pages/performance/index',
+    'pages/visit-edit/index',
+    'pages/route-plan/index',
+    'pages/contact-edit/index',
+    'pages/quote-edit/index'
   ],
   window: {
     backgroundTextStyle: 'light',

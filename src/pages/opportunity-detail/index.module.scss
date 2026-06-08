@@ -399,3 +399,103 @@
   background-color: $color-primary;
   color: $color-text-white;
 }
+
+.syncCard {
+  margin: $spacing-md $page-padding;
+}
+
+.syncRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.syncLabel {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+}
+
+.syncInfo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.syncTime {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.modalMask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+}
+
+.modalContent {
+  width: 100%;
+  background: $color-bg-card;
+  border-radius: 24rpx 24rpx 0 0;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx;
+  border-bottom: 1rpx solid $color-border-light;
+}
+
+.modalTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.modalCancel {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}
+
+.modalConfirm {
+  font-size: $font-size-md;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.pickerView {
+  padding: 40rpx 32rpx;
+  text-align: center;
+}
+
+.pickerText {
+  font-size: $font-size-lg;
+  color: $color-text-primary;
+}
+
+.dateTimePicker {
+  display: flex;
+  padding: 40rpx 32rpx;
+  gap: $spacing-lg;
+}
+
+.datePickerItem {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  background: $color-bg-secondary;
+  border-radius: $radius-md;
+}
+
+.datePickerText {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
