@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { View, Text, Image, Textarea } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
 import { useCRMStore } from '@/store';
@@ -16,7 +16,7 @@ const CheckInPage: React.FC = () => {
   const [notes, setNotes] = useState('');
   const [photos, setPhotos] = useState<{ url: string; type: string }[]>([]);
   const [checkInTime, setCheckInTime] = useState('');
-  const [createdVisitId, setCreatedVisitId] = useState<string | null>(null);
+  const createdRef = useRef(false);
 
   const customers = useCRMStore((state) => state.customers);
   const storeVisits = useCRMStore((state) => state.visits);
@@ -35,7 +35,7 @@ const CheckInPage: React.FC = () => {
           setCheckInTime(found.checkInTime || '');
         }
       }
-    } else if (customerId) {
+    } else if (customerId && !createdRef.current) {
       const customer = customers.find(c => c.id === customerId);
       if (customer) {
         const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
@@ -51,10 +51,22 @@ const CheckInPage: React.FC = () => {
         };
         const created = addVisit(newVisit);
         setVisit(created);
-        setCreatedVisitId(created.id);
+        createdRef.current = true;
       }
     }
   }, [visitId, customerId, storeVisits, customers, addVisit]);
+
+  useEffect(() => {
+    if (visit && visitId) {
+      const found = storeVisits.find(v => v.id === visitId);
+      if (found && found.status === 'completed' && status !== 'completed') {
+        setStatus('completed');
+        setNotes(found.notes || '');
+        setPhotos(found.photos?.map(p => ({ url: p, type: '门头照' })) || []);
+        setCheckInTime(found.checkInTime || '');
+      }
+    }
+  }, [storeVisits, visitId, visit, status]);
 
   const handleCheckIn = useCallback(() => {
     const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -85,7 +97,7 @@ const CheckInPage: React.FC = () => {
       content: '确认提交拜访纪要并完成本次拜访？',
       success: (res) => {
         if (res.confirm) {
-          const targetId = visit?.id || createdVisitId;
+          const targetId = visit?.id;
           if (targetId) {
             const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
             completeVisit(targetId, {
@@ -98,12 +110,12 @@ const CheckInPage: React.FC = () => {
           setStatus('completed');
           Taro.showToast({ title: '拜访已完成', icon: 'success' });
           setTimeout(() => {
-            Taro.navigateBack();
+            Taro.switchTab({ url: '/pages/visits/index' });
           }, 1500);
         }
       }
     });
-  }, [notes, photos, checkInTime, visit, createdVisitId, completeVisit]);
+  }, [notes, photos, checkInTime, visit, completeVisit]);
 
   const handleNotesChange = useCallback((e: any) => {
     setNotes(e.detail.value);
@@ -219,7 +231,7 @@ const CheckInPage: React.FC = () => {
               </View>
             ))}
             {status !== 'completed' && photos.length < 6 && (
-              <>
+              <React.Fragment>
                 <View className={styles.photoAdd} onClick={() => handleAddPhoto('门头照')}>
                   <Text className={styles.addIcon}>📷</Text>
                   <Text className={styles.addText}>门头照</Text>
@@ -228,7 +240,7 @@ const CheckInPage: React.FC = () => {
                   <Text className={styles.addIcon}>🖼️</Text>
                   <Text className={styles.addText}>陈列照</Text>
                 </View>
-              </>
+              </React.Fragment>
             )}
           </View>
         </View>
@@ -242,7 +254,7 @@ const CheckInPage: React.FC = () => {
           </View>
         )}
         {status === 'checkedin' && (
-          <>
+          <React.Fragment>
             <View
               className={`${styles.actionBtn} ${styles.secondary}`}
               onClick={() => Taro.showToast({ title: '功能开发中', icon: 'none' })}
@@ -252,11 +264,11 @@ const CheckInPage: React.FC = () => {
             <View className={`${styles.actionBtn} ${styles.primary}`} onClick={handleSubmit}>
               完成拜访
             </View>
-          </>
+          </React.Fragment>
         )}
         {status === 'completed' && (
-          <View className={`${styles.actionBtn} ${styles.success}`} onClick={() => Taro.navigateBack()}>
-            返回列表
+          <View className={`${styles.actionBtn} ${styles.success}`} onClick={() => Taro.switchTab({ url: '/pages/visits/index' })}>
+            返回拜访记录
           </View>
         )}
       </View>

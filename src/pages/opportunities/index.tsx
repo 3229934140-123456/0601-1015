@@ -1,21 +1,27 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, Image, ScrollView, Input } from '@tarojs/components';
-import Taro from '@tarojs/taro';
-import { usePullDownRefresh } from '@tarojs/taro';
-import { mockOpportunities } from '@/data/mock';
+import Taro, { useDidShow, usePullDownRefresh } from '@tarojs/taro';
+import { useCRMStore } from '@/store';
 import { getStageText, formatMoney, formatDate, formatPercent } from '@/utils';
 import styles from './index.module.scss';
 import type { Opportunity } from '@/types';
 
 const OpportunitiesPage: React.FC = () => {
+  const storeOpportunities = useCRMStore((state) => state.opportunities);
+
   const [searchText, setSearchText] = useState('');
   const [activeStage, setActiveStage] = useState('all');
-  const [opportunities, setOpportunities] = useState<Opportunity[]>(mockOpportunities);
+  const [opportunities, setOpportunities] = useState<Opportunity[]>(storeOpportunities);
+
+  useDidShow(() => {
+    setOpportunities(storeOpportunities);
+  });
 
   usePullDownRefresh(() => {
     setTimeout(() => {
+      setOpportunities(storeOpportunities);
       Taro.stopPullDownRefresh();
-    }, 1000);
+    }, 500);
   });
 
   const stages = [

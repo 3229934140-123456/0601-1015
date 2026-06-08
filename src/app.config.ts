@@ -15,7 +15,9 @@ export default defineAppConfig({
     'pages/visit-edit/index',
     'pages/route-plan/index',
     'pages/contact-edit/index',
-    'pages/quote-edit/index'
+    'pages/quote-edit/index',
+    'pages/contacts/index',
+    'pages/quotes/index'
   ],
   window: {
     backgroundTextStyle: 'light',

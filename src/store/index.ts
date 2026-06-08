@@ -209,13 +209,21 @@ export const useCRMStore = create<CRMState>()(
       },
 
       syncOpportunityForApproval: (opportunityId) => {
+        const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
+        set((state) => ({
+          opportunities: state.opportunities.map((o) =>
+            o.id === opportunityId
+              ? { ...o, lastSyncTime: now, approvalStatus: 'pending' as const }
+              : o
+          )
+        }));
         const opportunity = get().opportunities.find((o) => o.id === opportunityId);
         if (opportunity) {
           get().addMessage({
             type: 'approval',
             title: '商机审批通知',
             content: `${opportunity.title} 已同步给主管审批，金额 ¥${(opportunity.amount / 10000).toFixed(1)}万。`,
-            time: new Date().toISOString().slice(0, 16).replace('T', ' '),
+            time: now,
             read: false,
             relatedId: opportunity.id,
             relatedType: 'opportunity'

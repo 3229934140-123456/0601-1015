@@ -29,8 +29,6 @@ const OpportunityDetailPage: React.FC = () => {
   const [selectedStage, setSelectedStage] = useState('');
   const [followUpDate, setFollowUpDate] = useState('');
   const [followUpTime, setFollowUpTime] = useState('10:00');
-  const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
-  const [syncStatus, setSyncStatus] = useState<string | null>(null);
 
   const stages = [
     { key: 'lead', label: '线索' },
@@ -128,9 +126,6 @@ const OpportunityDetailPage: React.FC = () => {
         if (res.confirm) {
           if (opportunityId) {
             syncOpportunityForApproval(opportunityId);
-            const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
-            setLastSyncTime(now);
-            setSyncStatus('pending');
             Taro.showToast({ title: '已同步给主管', icon: 'success' });
           }
         }
@@ -200,13 +195,17 @@ const OpportunityDetailPage: React.FC = () => {
       </Card>
 
       {/* 同步信息 */}
-      {lastSyncTime && (
+      {opportunity.lastSyncTime && (
         <Card className={styles.syncCard}>
           <View className={styles.syncRow}>
             <Text className={styles.syncLabel}>最近同步</Text>
             <View className={styles.syncInfo}>
-              <Tag text={syncStatus === 'pending' ? '待审批' : '已同步'} type={syncStatus === 'pending' ? 'warning' : 'success'} size="sm" />
-              <Text className={styles.syncTime}>{lastSyncTime}</Text>
+              <Tag 
+                text={opportunity.approvalStatus === 'pending' ? '待审批' : '已同步'} 
+                type={opportunity.approvalStatus === 'pending' ? 'warning' : 'success'} 
+                size="sm" 
+              />
+              <Text className={styles.syncTime}>{opportunity.lastSyncTime}</Text>
             </View>
           </View>
         </Card>

@@ -63,6 +63,8 @@ export interface Opportunity {
   competitors: string[];
   budget: number;
   createdAt: string;
+  lastSyncTime?: string;
+  approvalStatus?: 'pending' | 'approved' | 'rejected' | 'none';
 }
 
 // 报价单类型

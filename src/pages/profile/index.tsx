@@ -1,14 +1,23 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, Image, ScrollView } from '@tarojs/components';
-import Taro from '@tarojs/taro';
-import { usePullDownRefresh } from '@tarojs/taro';
-import { mockUser, mockPerformance, mockMessages } from '@/data/mock';
+import Taro, { useDidShow, usePullDownRefresh } from '@tarojs/taro';
+import { useCRMStore } from '@/store';
+import { mockUser } from '@/data/mock';
 import { formatMoney, formatPercent } from '@/utils';
 import styles from './index.module.scss';
 
 const ProfilePage: React.FC = () => {
-  const [performance] = useState(mockPerformance);
-  const [unreadCount] = useState(mockMessages.filter(m => !m.read).length);
+  const performance = useCRMStore((state) => state.performance);
+  const messages = useCRMStore((state) => state.messages);
+  const contacts = useCRMStore((state) => state.contacts);
+  const quotes = useCRMStore((state) => state.quotes);
+  const customers = useCRMStore((state) => state.customers);
+
+  const unreadCount = useMemo(() => messages.filter(m => !m.read).length, [messages]);
+
+  useDidShow(() => {
+    // 页面显示时自动刷新数据
+  });
 
   usePullDownRefresh(() => {
     setTimeout(() => {
@@ -35,7 +44,7 @@ const ProfilePage: React.FC = () => {
   }, []);
 
   const handleQuoteClick = useCallback(() => {
-    Taro.showToast({ title: '报价记录功能开发中', icon: 'none' });
+    Taro.navigateTo({ url: '/pages/quotes/index' });
   }, []);
 
   const handleApprovalClick = useCallback(() => {
@@ -43,7 +52,7 @@ const ProfilePage: React.FC = () => {
   }, []);
 
   const handleContactClick = useCallback(() => {
-    Taro.showToast({ title: '联系人功能开发中', icon: 'none' });
+    Taro.navigateTo({ url: '/pages/contacts/index' });
   }, []);
 
   const handleSettingClick = useCallback(() => {
@@ -64,7 +73,7 @@ const ProfilePage: React.FC = () => {
       icon: '👥',
       iconClass: 'customer',
       title: '我的客户',
-      subtitle: `共 ${12} 位客户`,
+      subtitle: `共 ${customers.length} 位客户`,
       onClick: handleCustomerClick
     },
     {
@@ -80,7 +89,7 @@ const ProfilePage: React.FC = () => {
       icon: '📄',
       iconClass: 'quote',
       title: '报价记录',
-      subtitle: '查看所有报价单',
+      subtitle: `共 ${quotes.length} 份报价单`,
       onClick: handleQuoteClick
     },
     {
@@ -107,6 +116,7 @@ const ProfilePage: React.FC = () => {
       icon: '📱',
       iconClass: 'contact',
       title: '联系人管理',
+      subtitle: `共 ${contacts.length} 位联系人`,
       onClick: handleContactClick
     },
     {
@@ -223,6 +233,9 @@ const ProfilePage: React.FC = () => {
             </View>
             <View className={styles.menuContent}>
               <Text className={styles.menuTitle}>{item.title}</Text>
+              {item.subtitle && (
+                <Text className={styles.menuSubtitle}>{item.subtitle}</Text>
+              )}
             </View>
             <View className={styles.menuRight}>
               {item.badge && item.badge > 0 && (
